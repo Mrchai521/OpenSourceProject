@@ -41,8 +41,17 @@ public class SysMailController extends BaseController {
         return prefix + "/mail";
     }
 
-    public AjaxResult sendMail() {
-        return null;
+    /**
+     * 发送邮件
+     *
+     * @param sysMail
+     * @return
+     */
+    @RequiresPermissions("system:mail:sendMail")
+    @PostMapping("/sendMail")
+    public AjaxResult sendMail(SysMail sysMail) {
+        String msg = sysMailService.sendMail(sysMail);
+        return AjaxResult.success(msg, null);
     }
 
     /**

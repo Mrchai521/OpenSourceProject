@@ -1014,6 +1014,11 @@ var table = {
             	table.set();
             	$.modal.open("添加" + table.options.modalName, $.operate.addUrl(id));
             },
+			// 发送邮件
+			sendMail: function(id) {
+				table.set();
+				$.modal.open("发送" + table.options.modalName, $.operate.sendUrl(id));
+			},
             // 添加信息，以tab页展现
             addTab: function (id) {
             	table.set();
@@ -1025,6 +1030,26 @@ var table = {
             	var url = $.common.isEmpty(id) ? table.options.createUrl : table.options.createUrl.replace("{id}", id);
                 $.modal.openFull("添加" + table.options.modalName, url);
             },
+			// 发送邮件 刷新表格
+			sendMail: function(url, data, callback) {
+				var config = {
+					url: url,
+					type: "post",
+					dataType: "json",
+					data: data,
+					beforeSend: function () {
+						$.modal.loading("正在处理中，请稍后...");
+						$.modal.disable();
+					},
+					success: function(result) {
+						if (typeof callback == "function") {
+							callback(result);
+						}
+						$.operate.successCallback(result);
+					}
+				};
+				$.ajax(config)
+			},
             // 添加访问地址
             addUrl: function(id) {
             	var url = $.common.isEmpty(id) ? table.options.createUrl.replace("{id}", "") : table.options.createUrl.replace("{id}", id);
@@ -1106,6 +1131,7 @@ var table = {
         	    };
         	    $.ajax(config)
             },
+
             // 保存信息 弹出提示框
             saveModal: function(url, data, callback) {
             	var config = {

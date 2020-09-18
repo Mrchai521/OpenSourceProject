@@ -58,4 +58,10 @@ public interface ISysMailService {
      * @return 结果
      */
     public int deleteSysMailById(Integer mailId);
+
+    /**
+     * 发送邮件
+     * @param sysMail
+     */
+    String sendMail(SysMail sysMail);
 }

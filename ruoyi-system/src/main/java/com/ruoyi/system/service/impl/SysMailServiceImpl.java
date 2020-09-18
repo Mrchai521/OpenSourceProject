@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.SysMailMapper;
 import com.ruoyi.system.domain.SysMail;
@@ -20,6 +23,10 @@ import com.ruoyi.common.core.text.Convert;
 public class SysMailServiceImpl implements ISysMailService {
     @Autowired
     private SysMailMapper sysMailMapper;
+    @Autowired
+    private JavaMailSender javaMailSender;
+    @Autowired
+    private JavaMailSenderImpl javaMailSenderImpl;
 
     /**
      * 查询邮件
@@ -87,5 +94,33 @@ public class SysMailServiceImpl implements ISysMailService {
     @Override
     public int deleteSysMailById(Integer mailId) {
         return sysMailMapper.deleteSysMailById(mailId);
+    }
+
+    /**
+     * 获取邮件发信人
+     */
+    public String getMailSendFrom() {
+        return javaMailSenderImpl.getJavaMailProperties().getProperty("from");
+    }
+
+    @Override
+    public String sendMail(SysMail sysMail) {
+        try {
+            // true表示复杂类型
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(javaMailSender.createMimeMessage(), true);
+            //邮件发送人
+            mimeMessageHelper.setFrom(getMailSendFrom());
+            // 邮件收信人
+            mimeMessageHelper.setTo(sysMail.getSendObject());
+            //邮件主题
+            mimeMessageHelper.setSubject(sysMail.getMailTitle());
+            // 邮件内容
+            mimeMessageHelper.setText(sysMail.getMailContent(),true);
+            //正式发送邮件
+            javaMailSender.send(mimeMessageHelper.getMimeMessage());
+            return "发送成功！";
+        } catch (Exception e) {
+            return "发送失败";
+        }
     }
 }
