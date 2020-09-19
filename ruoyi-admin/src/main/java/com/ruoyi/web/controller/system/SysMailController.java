@@ -129,4 +129,29 @@ public class SysMailController extends BaseController {
     public AjaxResult remove(String ids) {
         return toAjax(sysMailService.deleteSysMailByIds(ids));
     }
+
+    /**
+     * 查看笔记信息
+     */
+    @RequestMapping("/detail/{mailId}")
+    public String detail(@PathVariable("mailId") Long mailId, ModelMap mmap)
+    {
+        SysMail sysMail = sysMailService.selectSysMailById(Integer.parseInt(String.valueOf(mailId)));
+        mmap.put("sysMail", sysMail);
+        return prefix + "/detail";
+    }
+    /**
+     * 通过id发送邮件
+     *
+     * @param mailId
+     * @return
+     */
+    @RequiresPermissions("system:mail:sendMail")
+    @PostMapping("/sendMail/{mailId}")
+    public AjaxResult sendMail(@PathVariable("mailId") Long mailId) {
+        SysMail sysMail = sysMailService.selectSysMailById(Integer.parseInt(String.valueOf(mailId)));
+        String msg = sysMailService.sendMail(sysMail);
+        return AjaxResult.success(msg, null);
+    }
+
 }

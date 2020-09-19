@@ -53,7 +53,7 @@
 
     function submitHandler() {
         if ($.validate.form()) {
-            $.operate.save(prefix + "/add", $('#form-mail-add').serialize());
+            $.operate.sendMail(prefix + "/sendMail", $('#form-mail-add').serialize());
         }
     }
 
