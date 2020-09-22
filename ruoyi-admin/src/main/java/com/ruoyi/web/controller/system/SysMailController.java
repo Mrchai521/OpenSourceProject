@@ -148,10 +148,10 @@ public class SysMailController extends BaseController {
      */
     @RequiresPermissions("system:mail:sendMail")
     @PostMapping("/sendMail/{mailId}")
-    public AjaxResult sendMail(@PathVariable("mailId") Long mailId) {
+    public String sendMail(@PathVariable("mailId") Long mailId) {
         SysMail sysMail = sysMailService.selectSysMailById(Integer.parseInt(String.valueOf(mailId)));
         String msg = sysMailService.sendMail(sysMail);
-        return AjaxResult.success(msg, null);
+        return prefix + "/send";
     }
 
 }

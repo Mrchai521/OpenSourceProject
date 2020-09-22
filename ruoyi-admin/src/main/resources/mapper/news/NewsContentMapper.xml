@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.news.mapper.NewsContentMapper">
+    
+    <resultMap type="NewsContent" id="NewsContentResult">
+        <result property="newsContentId"    column="news_content_id"    />
+        <result property="newsContentTitle"    column="news_content_title"    />
+        <result property="newsContentText"    column="news_content_text"    />
+        <result property="newsMenuId"    column="news_menu_id"    />
+    </resultMap>
+
+    <sql id="selectNewsContentVo">
+        select news_content_id, news_content_title, news_content_text, news_menu_id from news_content
+    </sql>
+
+    <select id="selectNewsContentList" parameterType="NewsContent" resultMap="NewsContentResult">
+        <include refid="selectNewsContentVo"/>
+        <where>  
+            <if test="newsContentTitle != null  and newsContentTitle != ''"> and news_content_title = #{newsContentTitle}</if>
+            <if test="newsContentText != null  and newsContentText != ''"> and news_content_text = #{newsContentText}</if>
+            <if test="newsMenuId != null "> and news_menu_id = #{newsMenuId}</if>
+        </where>
+    </select>
+    
+    <select id="selectNewsContentById" parameterType="Long" resultMap="NewsContentResult">
+        <include refid="selectNewsContentVo"/>
+        where news_content_id = #{newsContentId}
+    </select>
+        
+    <insert id="insertNewsContent" parameterType="NewsContent" useGeneratedKeys="true" keyProperty="newsContentId">
+        insert into news_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="newsContentTitle != null">news_content_title,</if>
+            <if test="newsContentText != null">news_content_text,</if>
+            <if test="newsMenuId != null">news_menu_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="newsContentTitle != null">#{newsContentTitle},</if>
+            <if test="newsContentText != null">#{newsContentText},</if>
+            <if test="newsMenuId != null">#{newsMenuId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNewsContent" parameterType="NewsContent">
+        update news_content
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="newsContentTitle != null">news_content_title = #{newsContentTitle},</if>
+            <if test="newsContentText != null">news_content_text = #{newsContentText},</if>
+            <if test="newsMenuId != null">news_menu_id = #{newsMenuId},</if>
+        </trim>
+        where news_content_id = #{newsContentId}
+    </update>
+
+    <delete id="deleteNewsContentById" parameterType="Long">
+        delete from news_content where news_content_id = #{newsContentId}
+    </delete>
+
+    <delete id="deleteNewsContentByIds" parameterType="String">
+        delete from news_content where news_content_id in 
+        <foreach item="newsContentId" collection="array" open="(" separator="," close=")">
+            #{newsContentId}
+        </foreach>
+    </delete>
+
+</mapper>

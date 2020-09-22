@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.news.mapper.NewsMenuMapper">
+    
+    <resultMap type="NewsMenu" id="NewsMenuResult">
+        <result property="newsMenuId"    column="news_menu_id"    />
+        <result property="newsMenuParentId"    column="news_menu_parent_id"    />
+        <result property="newsMenuName"    column="news_menu_name"    />
+        <result property="newsMenuType"    column="news_menu_type"    />
+        <result property="newsMenuIcon"    column="news_menu_icon"    />
+        <result property="newsMenuVisibel"    column="news_menu_visibel"    />
+        <result property="parentName" column="parent_name" />
+    </resultMap>
+
+    <sql id="selectNewsMenuVo">
+        select news_menu_id, news_menu_parent_id, news_menu_name, news_menu_type, news_menu_icon, news_menu_visibel from news_menu
+    </sql>
+
+    <select id="selectNewsMenuList" parameterType="NewsMenu" resultMap="NewsMenuResult">
+        <include refid="selectNewsMenuVo"/>
+        <where>  
+            <if test="newsMenuParentId != null "> and news_menu_parent_id = #{newsMenuParentId}</if>
+            <if test="newsMenuName != null  and newsMenuName != ''"> and news_menu_name like concat('%', #{newsMenuName}, '%')</if>
+            <if test="newsMenuType != null  and newsMenuType != ''"> and news_menu_type = #{newsMenuType}</if>
+            <if test="newsMenuIcon != null  and newsMenuIcon != ''"> and news_menu_icon = #{newsMenuIcon}</if>
+            <if test="newsMenuVisibel != null  and newsMenuVisibel != ''"> and news_menu_visibel = #{newsMenuVisibel}</if>
+        </where>
+        order by news_menu_parent_id
+    </select>
+    
+    <select id="selectNewsMenuById" parameterType="Long" resultMap="NewsMenuResult">
+        select t.news_menu_id, t.news_menu_parent_id, t.news_menu_name, t.news_menu_type, t.news_menu_icon, t.news_menu_visibel, p.news_menu_name as parent_name
+        from news_menu t
+        left join news_menu p on p.news_menu_id = t.news_menu_parent_id
+        where t.news_menu_id = #{newsMenuId}
+    </select>
+        
+    <insert id="insertNewsMenu" parameterType="NewsMenu" useGeneratedKeys="true" keyProperty="newsMenuId">
+        insert into news_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="newsMenuParentId != null">news_menu_parent_id,</if>
+            <if test="newsMenuName != null">news_menu_name,</if>
+            <if test="newsMenuType != null">news_menu_type,</if>
+            <if test="newsMenuIcon != null">news_menu_icon,</if>
+            <if test="newsMenuVisibel != null">news_menu_visibel,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="newsMenuParentId != null">#{newsMenuParentId},</if>
+            <if test="newsMenuName != null">#{newsMenuName},</if>
+            <if test="newsMenuType != null">#{newsMenuType},</if>
+            <if test="newsMenuIcon != null">#{newsMenuIcon},</if>
+            <if test="newsMenuVisibel != null">#{newsMenuVisibel},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNewsMenu" parameterType="NewsMenu">
+        update news_menu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="newsMenuParentId != null">news_menu_parent_id = #{newsMenuParentId},</if>
+            <if test="newsMenuName != null">news_menu_name = #{newsMenuName},</if>
+            <if test="newsMenuType != null">news_menu_type = #{newsMenuType},</if>
+            <if test="newsMenuIcon != null">news_menu_icon = #{newsMenuIcon},</if>
+            <if test="newsMenuVisibel != null">news_menu_visibel = #{newsMenuVisibel},</if>
+        </trim>
+        where news_menu_id = #{newsMenuId}
+    </update>
+
+    <delete id="deleteNewsMenuById" parameterType="Long">
+        delete from news_menu where news_menu_id = #{newsMenuId}
+    </delete>
+
+    <delete id="deleteNewsMenuByIds" parameterType="String">
+        delete from news_menu where news_menu_id in 
+        <foreach item="newsMenuId" collection="array" open="(" separator="," close=")">
+            #{newsMenuId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1017,10 +1017,8 @@ var table = {
             // 发送邮件
             sendMail: function (id) {
                 table.set();
-                var url = table.options.sendUrl(id);
-                console.log("url为：",url);
                 var config = {
-                    url: url,
+                    url: "/system/mail/sendMail/",
                     type: "post",
                     dataType: "json",
                     data: id,
@@ -1051,7 +1049,7 @@ var table = {
                 return url;
             },
             // 发送的访问地址
-            sendUrl: function (id) {
+            sendMailUrl: function (id) {
                 var url = $.common.isEmpty(id) ? table.options.createUrl.replace("{id}", "") : table.options.createUrl.replace("{id}", id);
                 console.log("id:",id);
                 console.log("url:",url);
