@@ -1016,7 +1016,6 @@ var table = {
             },
             // 发送邮件
             sendMail: function (id) {
-                table.set();
                 var config = {
                     url: "/system/mail/sendMail/",
                     type: "post",
@@ -1027,6 +1026,7 @@ var table = {
                         $.modal.disable();
                     },
                     success: function (result) {
+                        alert(result+"nihaole")
                         $.operate.successCallback(result);
                     }
                 };
@@ -1051,8 +1051,8 @@ var table = {
             // 发送的访问地址
             sendMailUrl: function (id) {
                 var url = $.common.isEmpty(id) ? table.options.createUrl.replace("{id}", "") : table.options.createUrl.replace("{id}", id);
-                console.log("id:",id);
-                console.log("url:",url);
+                console.log("id:", id);
+                console.log("url:", url);
                 return url;
             },
             // 保存信息 刷新表格

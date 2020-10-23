@@ -10,13 +10,13 @@
         <div class="form-group">
             <label class="col-sm-3 control-label is-required">邮件标题：</label>
             <div class="col-sm-8">
-                <input name="mailTitle" class="form-control" type="text" required>
+                <input name="mailTitle" class="form-control" type="text" th:field="*{mailTitle}"  required>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">邮件内容：</label>
             <div class="col-sm-8">
-                <input type="hidden" class="form-control" name="mailContent">
+                <input type="hidden" class="form-control" name="mailContent" th:field="*{mailContent}">
                 <div class="summernote" id="mailContent"></div>
             </div>
         </div>
@@ -32,13 +32,13 @@
         <div class="form-group">
             <label class="col-sm-3 control-label is-required">发送对象：</label>
             <div class="col-sm-8">
-                <input name="sendObject" class="form-control" type="text" required>
+                <input name="sendObject" class="form-control" type="text" th:field="*{sendObject}" required>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">备注：</label>
             <div class="col-sm-8">
-                <input name="remark" class="form-control" type="text">
+                <input name="remark" th:field="*{remark}" class="form-control" type="text">
             </div>
         </div>
     </form>
@@ -53,7 +53,7 @@
 
     function submitHandler() {
         if ($.validate.form()) {
-            $.operate.sendMail(prefix + "/sendMail", $('#form-mail-add').serialize());
+            $.operate.sendMail(prefix + "/sendMail/"+$('#form-mail-add').serialize(),$('#form-mail-add').serialize());
         }
     }
 

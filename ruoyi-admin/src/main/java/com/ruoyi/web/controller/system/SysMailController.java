@@ -44,12 +44,13 @@ public class SysMailController extends BaseController {
     /**
      * 发送邮件
      *
-     * @param sysMail
+     * @param mailId
      * @return
      */
     @RequiresPermissions("system:mail:sendMail")
-    @PostMapping("/sendMail")
-    public AjaxResult sendMail(SysMail sysMail) {
+    @PostMapping("/sendMail/{mailId}")
+    public AjaxResult sendMail(@PathVariable("mailId")Integer mailId) {
+        SysMail sysMail = sysMailService.selectSysMailById(mailId);
         String msg = sysMailService.sendMail(sysMail);
         return AjaxResult.success(msg, null);
     }
@@ -134,24 +135,24 @@ public class SysMailController extends BaseController {
      * 查看笔记信息
      */
     @RequestMapping("/detail/{mailId}")
-    public String detail(@PathVariable("mailId") Long mailId, ModelMap mmap)
-    {
+    public String detail(@PathVariable("mailId") Long mailId, ModelMap mmap) {
         SysMail sysMail = sysMailService.selectSysMailById(Integer.parseInt(String.valueOf(mailId)));
         mmap.put("sysMail", sysMail);
         return prefix + "/detail";
     }
-    /**
-     * 通过id发送邮件
-     *
-     * @param mailId
-     * @return
-     */
-    @RequiresPermissions("system:mail:sendMail")
-    @PostMapping("/sendMail/{mailId}")
-    public String sendMail(@PathVariable("mailId") Long mailId) {
-        SysMail sysMail = sysMailService.selectSysMailById(Integer.parseInt(String.valueOf(mailId)));
-        String msg = sysMailService.sendMail(sysMail);
-        return prefix + "/send";
-    }
+
+//    /**
+//     * 通过id发送邮件
+//     *
+//     * @param mailId
+//     * @return
+//     */
+//    @RequiresPermissions("system:mail:sendMail")
+//    @PostMapping("/sendMail/{mailId}")
+//    public String sendMail(@PathVariable("mailId") Long mailId) {
+//        SysMail sysMail = sysMailService.selectSysMailById(Integer.parseInt(String.valueOf(mailId)));
+//        String msg = sysMailService.sendMail(sysMail);
+//        return prefix + "/send";
+//    }
 
 }
